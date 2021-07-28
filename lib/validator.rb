@@ -8,11 +8,12 @@ class Validator
   end
 
   def validate
-    # Start creating your solution here.
-    #
-    # It's likely that you'll want to have many more classes than this one that
-    # was provided for you. Don't be hesistant to extract new objects (and
-    # write tests for them).
+    parsed_sudoku_string = parse_puzzle_string
   end
 
+
+  def parse_puzzle_string
+    parsed_string = @puzzle_string.gsub(/\D/, "")
+    parsed_string.chars.map(&:to_i).each_slice(9).to_a
+  end
 end
