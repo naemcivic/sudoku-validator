@@ -1,4 +1,13 @@
+require 'sudoku_check_service.rb'
+
 class Validator
+  NON_DIGIT_PATTERN = /\D/
+  SUDOKU_STATUS = {
+       invalid: 'This sudoku is invalid.',
+    incomplete: 'This sudoku is valid, but incomplete.',
+         valid: 'This sudoku is valid.'
+  }.freeze
+
   def initialize(puzzle_string)
     @puzzle_string = puzzle_string
   end
@@ -8,11 +17,21 @@ class Validator
   end
 
   def validate
-    # Start creating your solution here.
-    #
-    # It's likely that you'll want to have many more classes than this one that
-    # was provided for you. Don't be hesistant to extract new objects (and
-    # write tests for them).
+    @result = SudokuCheckService.new(parse_puzzle_string)
+    output_result
   end
 
+
+  def parse_puzzle_string
+    parsed_string = @puzzle_string.gsub(NON_DIGIT_PATTERN, "")
+    parsed_string.chars.map(&:to_i).each_slice(9).to_a
+  end
+
+  private
+
+  def output_result
+    return SUDOKU_STATUS[:invalid] unless @result.sudoku?
+    return SUDOKU_STATUS[:incomplete] unless @result.complete?
+    SUDOKU_STATUS[:valid]
+  end
 end
